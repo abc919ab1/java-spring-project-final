@@ -10,10 +10,10 @@ public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String filename;
     private String filePath;
     private LocalDateTime timestamp;
+    private String description;
 
     public Photo() {}
 
@@ -29,6 +29,8 @@ public class Photo {
     public void setFilename(String filename) { this.filename = filename; }
     public String getFilePath() { return filePath; }
     public void setFilePath(String filePath) { this.filePath = filePath; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
     public LocalDateTime getTimestamp() { return timestamp; }
     public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
 }

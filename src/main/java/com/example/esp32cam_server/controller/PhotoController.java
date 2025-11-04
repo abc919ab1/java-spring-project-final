@@ -16,11 +16,13 @@ public class PhotoController {
     @Autowired
     private PhotoRepository photoRepository;
 
+    // --- READ ALL ---
     @GetMapping
     public List<Photo> getAllPhotos() {
         return photoRepository.findAll();
     }
 
+    // --- READ ONE ---
     @GetMapping("/{id}")
     public ResponseEntity<Photo> getPhotoById(@PathVariable Long id) {
         Optional<Photo> photo = photoRepository.findById(id);
@@ -28,6 +30,7 @@ public class PhotoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // --- DELETE ---
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePhoto(@PathVariable Long id) {
         if (photoRepository.existsById(id)) {
@@ -36,5 +39,23 @@ public class PhotoController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // --- UPDATE (add/edit description) ---
+    @PutMapping("/{id}")
+    public ResponseEntity<Photo> updatePhotoDescription(
+            @PathVariable Long id,
+            @RequestBody Photo updatedPhoto) {
+
+        Optional<Photo> optionalPhoto = photoRepository.findById(id);
+        if (optionalPhoto.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Photo existingPhoto = optionalPhoto.get();
+        existingPhoto.setDescription(updatedPhoto.getDescription());
+        Photo savedPhoto = photoRepository.save(existingPhoto);
+
+        return ResponseEntity.ok(savedPhoto);
     }
 }

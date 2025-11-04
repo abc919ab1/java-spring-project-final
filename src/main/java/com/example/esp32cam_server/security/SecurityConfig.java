@@ -36,12 +36,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
+                        // Public endpoints (no login needed)
                         .requestMatchers("/auth/**").permitAll()
-                        // Protected endpoints
-                        .requestMatchers("/upload").authenticated()
-                        .requestMatchers("/photos/**").authenticated()
-                        // Default rule: everything else needs auth
+
+                        // Protected endpoints (must have USER authority)
+                        .requestMatchers("/upload").hasAuthority("USER")
+                        .requestMatchers("/photos/**").hasAuthority("USER")
+
+                        // Everything else must be authenticated
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
