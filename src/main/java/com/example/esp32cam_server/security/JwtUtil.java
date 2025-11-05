@@ -12,7 +12,7 @@ public class JwtUtil {
 
 
     private static final String SECRET_KEY = "my-secret-key-which-should-be-very-secure-and-long-for-hmacsha256";
-    private static final long EXPIRATION_MS = 1000 * 60 * 60 * 24; // 24 hours
+    private static final long EXPIRATION_MS = 1000L * 60 * 60 * 24 * 30; // 24 hours
 
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 

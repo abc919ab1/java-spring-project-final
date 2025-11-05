@@ -3,34 +3,44 @@ package com.example.esp32cam_server.controller;
 import com.example.esp32cam_server.model.Photo;
 import com.example.esp32cam_server.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @RestController
+@RequestMapping("/upload")
+@CrossOrigin(origins = "http://localhost:5173") // allow React frontend
 public class UploadController {
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Autowired
     private PhotoRepository photoRepository;
 
-    @PostMapping("/upload")
+    @PostMapping
     public ResponseEntity<String> uploadImage(@RequestBody byte[] imageBytes) {
         try {
-            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-            String filename = "photo_" + timestamp + ".jpg";
-
-            Path folder = Paths.get("uploads");
+            // create folder if needed
+            Path folder = Paths.get(uploadPath);
             if (!Files.exists(folder)) {
                 Files.createDirectories(folder);
             }
 
+            // generate filename
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            String filename = "photo_" + timestamp + ".jpg";
             Path filePath = folder.resolve(filename);
+
+            // save image bytes
             Files.write(filePath, imageBytes);
 
-            // save metadata in database
+            // ✅ save record in database
             Photo photo = new Photo(filename, filePath.toString(), LocalDateTime.now());
             photoRepository.save(photo);
 
@@ -39,13 +49,8 @@ public class UploadController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Upload failed: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body("Upload failed: " + e.getMessage());
         }
-    }
-
-    // NEW — list all saved photos
-    @GetMapping("upload/photos")
-    public ResponseEntity<?> listPhotos() {
-        return ResponseEntity.ok(photoRepository.findAll());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.esp32cam_server.controller;
 
+import com.example.esp32cam_server.dto.PhotoUpdateDTO;
 import com.example.esp32cam_server.model.Photo;
 import com.example.esp32cam_server.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +46,18 @@ public class PhotoController {
     @PutMapping("/{id}")
     public ResponseEntity<Photo> updatePhotoDescription(
             @PathVariable Long id,
-            @RequestBody Photo updatedPhoto) {
+            @RequestBody PhotoUpdateDTO dto) {
 
         Optional<Photo> optionalPhoto = photoRepository.findById(id);
         if (optionalPhoto.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        Photo existingPhoto = optionalPhoto.get();
-        existingPhoto.setDescription(updatedPhoto.getDescription());
-        Photo savedPhoto = photoRepository.save(existingPhoto);
+        Photo photo = optionalPhoto.get();
+        photo.setDescription(dto.getDescription());
+        photoRepository.save(photo);
 
-        return ResponseEntity.ok(savedPhoto);
+        return ResponseEntity.ok(photo);
     }
+
 }
