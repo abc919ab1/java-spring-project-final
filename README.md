@@ -5,6 +5,93 @@ REST API that receives photos from an ESP32-CAM, stores them in MySQL, and expos
 
 ## Class Diagram
 
+![Class Diagram](class-diagram.png)
+
+<details>
+<summary>View PlantUML Source Code</summary>
+
+```plantuml
+@startuml
+abstract class Media {
+  - Long id
+  - String filename
+  - String filePath
+  - LocalDateTime timestamp
+  - String description
+}
+
+class Photo {
+}
+
+class RawPhoto {
+  - int isoValue
+}
+
+class ProcessedPhoto {
+  - String filterName
+}
+
+class User {
+  - Long id
+  - String username
+  - String password
+  - String role
+}
+
+Media <|-- Photo
+Media <|-- RawPhoto
+Media <|-- ProcessedPhoto
+
+interface PhotoRepository
+interface RawPhotoRepository
+interface ProcessedPhotoRepository
+interface UserRepository
+
+class PhotoController {
+  - PhotoRepository photoRepository
+}
+class RawPhotoController {
+  - RawPhotoRepository repo
+}
+class ProcessedPhotoController {
+  - ProcessedPhotoRepository repo
+}
+class AuthController {
+  - UserRepository userRepository
+  - PasswordEncoder passwordEncoder
+  - JwtUtil jwtUtil
+}
+
+PhotoController --> PhotoRepository
+RawPhotoController --> RawPhotoRepository
+ProcessedPhotoController --> ProcessedPhotoRepository
+AuthController --> UserRepository
+
+class JwtUtil
+class JwtRequestFilter
+class SecurityConfig
+
+AuthController --> JwtUtil
+JwtRequestFilter --> JwtUtil
+
+note right of Media
+  Single Table Inheritance
+  Discriminator: media_type
+end note
+@enduml
+```
+
+**Architecture Overview:**
+- **Inheritance Strategy**: Single Table Inheritance (all Media types in one table with discriminator column)
+- **Parent Class**: Media (abstract) - shared attributes for all media types
+- **Child Classes**: Photo, RawPhoto (with isoValue), ProcessedPhoto (with filterName)
+- **Authentication**: JWT Bearer token authentication with Spring Security
+- **Persistence**: JPA repositories for each entity type
+
+</details>
+
+For the full detailed UML diagram source file, see [class-diagram.puml](class-diagram.puml)
+
 ## Setup
 1. Clone the repo  
 2. Create MySQL schema `esp32cam` (see `schema.sql`)  
