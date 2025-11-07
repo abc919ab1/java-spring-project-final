@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("PROCESSED")
 public class ProcessedPhoto extends Media {
 
-    private String filterName;   // dummy attribute just to make it unique
+    private String filterName;
 
     public ProcessedPhoto() {}
 

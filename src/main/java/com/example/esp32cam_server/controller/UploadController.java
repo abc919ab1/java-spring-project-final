@@ -40,7 +40,7 @@ public class UploadController {
             // save image bytes
             Files.write(filePath, imageBytes);
 
-            // ✅ save record in database
+            // save record in database
             Photo photo = new Photo(filename, filePath.toString(), LocalDateTime.now());
             photoRepository.save(photo);
 

@@ -1,0 +1,18 @@
+[33m78389ca[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Sorted some files in the folders.
+[33m96a5f88[m fixed README.md
+[33mc909b53[m fixed README.md
+[33ma2a2f3f[m Adjusted some UI, did more testing, and created README.md.
+[33m9c16982[m Sorted out UI (react) lots of issues with authentication. Also added remaining ≥ 3 models with Parent / Child relationship + JPA inheritance
+[33m5b3102b[m PUT(update) wasnt working, but is now. Im simply using a description of a photo that the user can add afterwards, to tag photos. It is likely the only reasonable one in this scenario.
+[33m4a62bcc[m Created all CRUD endpoints. GET /photos works in Postman finally!
+[33mb1ef145[m Checkpoint.
+[33me71d484[m Spring security blocked esp32 Uploads, added /Upload to authorized in SecurityConfig.
+[33m6623889[m Sorted out correct HTTP status codes for incorrect password, and cleaned up some code.
+[33m6104554[m Created JWT-based authentication system for spring boot backend. Still does give some strange responses in postman.
+[33m84b4d5f[m UserRepository done for now.
+[33ma94c436[m Created a User entity model.
+[33m9ff623e[m Added dependencies in pom.xml for implementing authentication layer.
+[33mc6f0e07[m Added dependencies in pom.xml for implementing authentication layer.
+[33m4859082[m Created UploadController that will handle images from ESP32.
+[33mf449cef[m Setting up mysql config
+[33m5d98d5a[m Initial commit - Spring Boot project setup

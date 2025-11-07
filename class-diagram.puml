@@ -1,0 +1,262 @@
+@startuml ESP32-CAM Media Server Class Diagram
+
+' ============================================
+' MODELS / ENTITIES
+' ============================================
+
+abstract class Media {
+  - Long id
+  - String filename
+  - String filePath
+  - LocalDateTime timestamp
+  - String description
+  --
+  + Media()
+  + Media(filename, filePath, timestamp)
+  + getId(): Long
+  + getFilename(): String
+  + setFilename(filename): void
+  + getFilePath(): String
+  + setFilePath(filePath): void
+  + getTimestamp(): LocalDateTime
+  + setTimestamp(timestamp): void
+  + getDescription(): String
+  + setDescription(description): void
+}
+
+class Photo {
+  --
+  + Photo()
+  + Photo(filename, filePath, timestamp)
+}
+
+class RawPhoto {
+  - int isoValue
+  --
+  + RawPhoto()
+  + RawPhoto(filename, filePath, timestamp, isoValue)
+  + getIsoValue(): int
+  + setIsoValue(isoValue): void
+}
+
+class ProcessedPhoto {
+  - String filterName
+  --
+  + ProcessedPhoto()
+  + ProcessedPhoto(filename, filePath, timestamp, filterName)
+  + getFilterName(): String
+  + setFilterName(filterName): void
+}
+
+class User {
+  - Long id
+  - String username
+  - String password
+  - String role
+  --
+  + getId(): Long
+  + setId(id): void
+  + getUsername(): String
+  + setUsername(username): void
+  + getPassword(): String
+  + setPassword(password): void
+  + getRole(): String
+  + setRole(role): void
+}
+
+' ============================================
+' REPOSITORIES
+' ============================================
+
+interface PhotoRepository {
+  + findAll(): List<Photo>
+  + findById(id): Optional<Photo>
+  + save(photo): Photo
+  + deleteById(id): void
+  + existsById(id): boolean
+}
+
+interface RawPhotoRepository {
+  + findAll(): List<RawPhoto>
+  + findById(id): Optional<RawPhoto>
+  + save(rawPhoto): RawPhoto
+  + deleteById(id): void
+  + existsById(id): boolean
+}
+
+interface ProcessedPhotoRepository {
+  + findAll(): List<ProcessedPhoto>
+  + findById(id): Optional<ProcessedPhoto>
+  + save(processedPhoto): ProcessedPhoto
+  + deleteById(id): void
+  + existsById(id): boolean
+}
+
+interface UserRepository {
+  + findByUsername(username): Optional<User>
+  + save(user): User
+}
+
+' ============================================
+' CONTROLLERS
+' ============================================
+
+class PhotoController {
+  - PhotoRepository photoRepository
+  --
+  + getAllPhotos(): List<Photo>
+  + getPhotoById(id): ResponseEntity<Photo>
+  + deletePhoto(id): ResponseEntity<Void>
+  + updatePhotoDescription(id, dto): ResponseEntity<Photo>
+}
+
+class RawPhotoController {
+  - RawPhotoRepository repo
+  --
+  + all(): List<RawPhoto>
+  + one(id): ResponseEntity<RawPhoto>
+  + create(rawPhoto): RawPhoto
+  + update(id, newData): ResponseEntity<RawPhoto>
+  + delete(id): ResponseEntity<Void>
+}
+
+class ProcessedPhotoController {
+  - ProcessedPhotoRepository repo
+  --
+  + all(): List<ProcessedPhoto>
+  + one(id): ResponseEntity<ProcessedPhoto>
+  + create(processedPhoto): ProcessedPhoto
+  + update(id, newData): ResponseEntity<ProcessedPhoto>
+  + delete(id): ResponseEntity<Void>
+}
+
+class AuthController {
+  - UserRepository userRepository
+  - PasswordEncoder passwordEncoder
+  - JwtUtil jwtUtil
+  --
+  + register(userData): Map<String, String>
+  + login(userData): ResponseEntity<Map<String, String>>
+}
+
+class UploadController {
+  - String uploadPath
+  - PhotoRepository photoRepository
+  --
+  + uploadImage(file): ResponseEntity<Map<String, String>>
+}
+
+class ImageController {
+  - String uploadPath
+  --
+  + getImage(filename): ResponseEntity<Resource>
+}
+
+' ============================================
+' SECURITY
+' ============================================
+
+class SecurityConfig {
+  - JwtRequestFilter jwtRequestFilter
+  --
+  + securityFilterChain(http): SecurityFilterChain
+  + corsConfigurationSource(): CorsConfigurationSource
+  + passwordEncoder(): PasswordEncoder
+  + authenticationManager(config): AuthenticationManager
+}
+
+class JwtUtil {
+  - String SECRET_KEY
+  - long EXPIRATION_TIME
+  --
+  + generateToken(username): String
+  + extractUsername(token): String
+  + validateToken(token, username): boolean
+  - extractAllClaims(token): Claims
+  - isTokenExpired(token): boolean
+}
+
+class JwtRequestFilter {
+  - JwtUtil jwtUtil
+  - UserDetailsService userDetailsService
+  --
+  + doFilterInternal(request, response, chain): void
+}
+
+class UserDetailsServiceImpl {
+  - UserRepository userRepository
+  --
+  + loadUserByUsername(username): UserDetails
+}
+
+' ============================================
+' DTOs
+' ============================================
+
+class PhotoUpdateDTO {
+  - String description
+  --
+  + getDescription(): String
+  + setDescription(description): void
+}
+
+' ============================================
+' RELATIONSHIPS
+' ============================================
+
+' Inheritance (JPA Single Table Strategy)
+Media <|-- Photo
+Media <|-- RawPhoto
+Media <|-- ProcessedPhoto
+
+' Repository extends JpaRepository
+PhotoRepository --|> JpaRepository
+RawPhotoRepository --|> JpaRepository
+ProcessedPhotoRepository --|> JpaRepository
+UserRepository --|> JpaRepository
+
+' Controllers use Repositories
+PhotoController --> PhotoRepository : uses
+RawPhotoController --> RawPhotoRepository : uses
+ProcessedPhotoController --> ProcessedPhotoRepository : uses
+AuthController --> UserRepository : uses
+UploadController --> PhotoRepository : uses
+
+' Controllers use DTOs
+PhotoController --> PhotoUpdateDTO : uses
+
+' Security dependencies
+AuthController --> JwtUtil : uses
+AuthController --> PasswordEncoder : uses
+JwtRequestFilter --> JwtUtil : uses
+JwtRequestFilter --> UserDetailsService : uses
+UserDetailsServiceImpl --> UserRepository : uses
+SecurityConfig --> JwtRequestFilter : configures
+
+' Repositories manage Entities
+PhotoRepository --> Photo : manages
+RawPhotoRepository --> RawPhoto : manages
+ProcessedPhotoRepository --> ProcessedPhoto : manages
+UserRepository --> User : manages
+
+' Notes
+note right of Media
+  Abstract parent class
+  Uses Single Table Inheritance
+  with discriminator column
+  "media_type"
+end note
+
+note right of User
+  Stores authentication
+  credentials with
+  BCrypt encrypted password
+end note
+
+note right of JwtUtil
+  Handles JWT token
+  generation and validation
+  for Bearer authentication
+end note
+
+@enduml

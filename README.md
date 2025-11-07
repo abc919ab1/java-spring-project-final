@@ -117,6 +117,7 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 | POST   | `/upload`          | ESP32 binary upload       | no    |
 
 ## Trello Board
+https://trello.com/invite/b/690dfb461855f85f9ea240de/ATTIb5a8537d9f4da373c75c9adbad294166406772A9/esp32cam-java-backend-project
 
 
 ## Presentation Slides
