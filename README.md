@@ -123,7 +123,7 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 ## Security Layer
 | **File**                               | **Category**       | **Description**                                                                                                                  |
 | -------------------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| `security/SecurityConfig.java`         | Security Config | Configures Spring Security — disables CSRF, sets stateless JWT authentication, defines open routes, CORS, and password encoding. |
+| `security/SecurityConfig.java`         | Security Config | Configures Spring Security, disables CSRF, sets stateless JWT authentication, defines open routes, CORS, and password encoding. |
 | `security/JwtUtil.java`                | JWT Utility     | Creates, signs, parses, and validates JWT tokens using HMAC-SHA256.                                                              |
 | `security/JwtRequestFilter.java`       | Security Filter | Intercepts requests, extracts the JWT from headers, validates it, and sets authentication context.                               |
 | `security/UserDetailsServiceImpl.java` | User Loader     | Loads user data from the database and provides it to Spring Security’s authentication process.                                   |
@@ -174,7 +174,7 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 ## DTO (Data Transfer Objects)
 | **File**                  | **Category** | **Description**                                                           |
 | ------------------------- | ------------ | ------------------------------------------------------------------------- |
-| `dto/PhotoUpdateDTO.java` | 📨 DTO       | Used when updating photo descriptions; prevents sending full entity data. |
+| `dto/PhotoUpdateDTO.java` | DTO       | Used when updating photo descriptions; prevents sending full entity data. |
 
 
 
