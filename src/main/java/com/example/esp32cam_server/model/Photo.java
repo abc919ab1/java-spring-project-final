@@ -7,9 +7,6 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("PHOTO")
 public class Photo extends Media {
 
-    // Optional: add photo-specific attributes if needed
-    // private int width;
-    // private int height;
 
     public Photo() {
         super();
