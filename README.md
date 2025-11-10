@@ -108,67 +108,61 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 
 ## Package Overview:
 
-config → global configuration (CORS, web setup)
-
-controller → REST endpoints
-
-dto → data transfer objects
-
-model → database entities
-
-repository → database access layer
-
-security → JWT authentication and security config
-
-Esp32cam.java → main application entry point
 
 
 
 | **File Path**                                             | **Category**                   | **Description**                                                                                                |
 | --------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| `src/main/java/com/example/esp32cam_server/Esp32cam.java` | 🏁 **Application Entry Point** | Boots the Spring Boot application and initializes all components.                                              |
-| `config/WebConfig.java`                                   | ⚙️ **Configuration**           | Defines global CORS settings to allow communication between React frontend (`localhost:5173`) and backend API. |
+| `src/main/java/com/example/esp32cam_server/Esp32cam.java` | **Application Entry Point** | Boots the Spring Boot application and initializes all components.                                              |
+| `config/WebConfig.java`                                   | **Configuration**           | Defines global CORS settings to allow communication between React frontend (`localhost:5173`) and backend API. |
+
 
 
 
 ## Security Layer
 | **File**                               | **Category**       | **Description**                                                                                                                  |
 | -------------------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| `security/SecurityConfig.java`         | 🔒 Security Config | Configures Spring Security — disables CSRF, sets stateless JWT authentication, defines open routes, CORS, and password encoding. |
-| `security/JwtUtil.java`                | 🔑 JWT Utility     | Creates, signs, parses, and validates JWT tokens using HMAC-SHA256.                                                              |
-| `security/JwtRequestFilter.java`       | 🔍 Security Filter | Intercepts requests, extracts the JWT from headers, validates it, and sets authentication context.                               |
-| `security/UserDetailsServiceImpl.java` | 👤 User Loader     | Loads user data from the database and provides it to Spring Security’s authentication process.                                   |
+| `security/SecurityConfig.java`         | Security Config | Configures Spring Security — disables CSRF, sets stateless JWT authentication, defines open routes, CORS, and password encoding. |
+| `security/JwtUtil.java`                | JWT Utility     | Creates, signs, parses, and validates JWT tokens using HMAC-SHA256.                                                              |
+| `security/JwtRequestFilter.java`       | Security Filter | Intercepts requests, extracts the JWT from headers, validates it, and sets authentication context.                               |
+| `security/UserDetailsServiceImpl.java` | User Loader     | Loads user data from the database and provides it to Spring Security’s authentication process.                                   |
+
+
 
 
 ## Authentication
 | **File**                         | **Category**  | **Description**                                                                       |
 | -------------------------------- | ------------- | ------------------------------------------------------------------------------------- |
-| `controller/AuthController.java` | 🔐 Controller | Handles `/auth/register` and `/auth/login`. Encodes passwords and returns JWT tokens. |
-| `model/User.java`                | 🧱 Entity     | Defines the `User` entity with `id`, `username`, `password`, and `role` fields.       |
-| `repository/UserRepository.java` | 💾 Repository | Provides CRUD and `findByUsername()` for authentication queries.                      |
+| `controller/AuthController.java` | Controller | Handles `/auth/register` and `/auth/login`. Encodes passwords and returns JWT tokens. |
+| `model/User.java`                | Entity     | Defines the `User` entity with `id`, `username`, `password`, and `role` fields.       |
+| `repository/UserRepository.java` | Repository | Provides CRUD and `findByUsername()` for authentication queries.                      |
+
+
 
 
 ## Media & Photo Management
 | **File**                                   | **Category**       | **Description**                                                                                           |
 | ------------------------------------------ | ------------------ | --------------------------------------------------------------------------------------------------------- |
 | `model/Media.java`                         | 🧩 Abstract Entity | Base class for all media types with fields: `id`, `filename`, `filePath`, `timestamp`, and `description`. |
-| `model/Photo.java`                         | 🖼️ Entity         | Extends `Media` for normal photo uploads.                                                                 |
-| `model/ProcessedPhoto.java`                | 🎨 Entity          | Extends `Media` for post-processed photos. Adds `filterName` field.                                       |
-| `model/RawPhoto.java`                      | 📷 Entity          | Extends `Media` for unprocessed (raw) images. Adds `isoValue` field.                                      |
-| `repository/PhotoRepository.java`          | 💾 Repository      | CRUD access for `Photo` entities.                                                                         |
-| `repository/ProcessedPhotoRepository.java` | 💾 Repository      | CRUD access for `ProcessedPhoto` entities.                                                                |
-| `repository/RawPhotoRepository.java`       | 💾 Repository      | CRUD access for `RawPhoto` entities.                                                                      |
+| `model/Photo.java`                         | Entity         | Extends `Media` for normal photo uploads.                                                                 |
+| `model/ProcessedPhoto.java`                | Entity          | Extends `Media` for post-processed photos. Adds `filterName` field.                                       |
+| `model/RawPhoto.java`                      | Entity          | Extends `Media` for unprocessed (raw) images. Adds `isoValue` field.                                      |
+| `repository/PhotoRepository.java`          | Repository      | CRUD access for `Photo` entities.                                                                         |
+| `repository/ProcessedPhotoRepository.java` | Repository      | CRUD access for `ProcessedPhoto` entities.                                                                |
+| `repository/RawPhotoRepository.java`       | Repository      | CRUD access for `RawPhoto` entities.                                                                      |
+
 
 
 
 ## REST API Controllers
 | **File**                                   | **Category**   | **Description**                                                                                       |
 | ------------------------------------------ | -------------- | ----------------------------------------------------------------------------------------------------- |
-| `controller/UploadController.java`         | 📤 Controller  | Accepts image uploads from the ESP32-CAM (as raw bytes). Saves to disk and records metadata in MySQL. |
-| `controller/ImageController.java`          | 🖥️ Controller | Serves stored image files via `/images/{filename}` endpoint.                                          |
-| `controller/PhotoController.java`          | 🗂️ Controller | CRUD for photos: list, get, delete, and update description (via `PhotoUpdateDTO`).                    |
-| `controller/ProcessedPhotoController.java` | 🎛️ Controller | CRUD for processed photos. Automatically sets timestamp on creation.                                  |
-| `controller/RawPhotoController.java`       | ⚙️ Controller  | CRUD for raw photos, allows updating ISO value.                                                       |
+| `controller/UploadController.java`         | Controller  | Accepts image uploads from the ESP32-CAM (as raw bytes). Saves to disk and records metadata in MySQL. |
+| `controller/ImageController.java`          | Controller | Serves stored image files via `/images/{filename}` endpoint.                                          |
+| `controller/PhotoController.java`          | Controller | CRUD for photos: list, get, delete, and update description (via `PhotoUpdateDTO`).                    |
+| `controller/ProcessedPhotoController.java` | Controller | CRUD for processed photos. Automatically sets timestamp on creation.                                  |
+| `controller/RawPhotoController.java`       | Controller  | CRUD for raw photos, allows updating ISO value.                                                       |
+
 
 
 
