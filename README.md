@@ -1,4 +1,4 @@
-# Bridging IoT with Spring Boot, JPA, NySQL & React
+# Bridging IoT with Spring Boot, JPA, MySQL & React
 
 ## Description
 REST API that receives photos from an ESP32-CAM, stores them in MySQL, and exposes a React dashboard for viewing, editing and deleting images.
