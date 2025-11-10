@@ -116,7 +116,8 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 | `src/main/java/com/example/esp32cam_server/Esp32cam.java` | **Application Entry Point** | Boots the Spring Boot application and initializes all components.                                              |
 | `config/WebConfig.java`                                   | **Configuration**           | Defines global CORS settings to allow communication between React frontend (`localhost:5173`) and backend API. |
 
-
+<br>
+<br>
 
 
 ## Security Layer
@@ -128,7 +129,8 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 | `security/UserDetailsServiceImpl.java` | User Loader     | Loads user data from the database and provides it to Spring Security’s authentication process.                                   |
 
 
-
+<br>
+<br>
 
 ## Authentication
 | **File**                         | **Category**  | **Description**                                                                       |
@@ -138,12 +140,13 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 | `repository/UserRepository.java` | Repository | Provides CRUD and `findByUsername()` for authentication queries.                      |
 
 
-
+<br>
+<br>
 
 ## Media & Photo Management
 | **File**                                   | **Category**       | **Description**                                                                                           |
 | ------------------------------------------ | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| `model/Media.java`                         | 🧩 Abstract Entity | Base class for all media types with fields: `id`, `filename`, `filePath`, `timestamp`, and `description`. |
+| `model/Media.java`                         | Abstract Entity | Base class for all media types with fields: `id`, `filename`, `filePath`, `timestamp`, and `description`. |
 | `model/Photo.java`                         | Entity         | Extends `Media` for normal photo uploads.                                                                 |
 | `model/ProcessedPhoto.java`                | Entity          | Extends `Media` for post-processed photos. Adds `filterName` field.                                       |
 | `model/RawPhoto.java`                      | Entity          | Extends `Media` for unprocessed (raw) images. Adds `isoValue` field.                                      |
@@ -151,7 +154,8 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 | `repository/ProcessedPhotoRepository.java` | Repository      | CRUD access for `ProcessedPhoto` entities.                                                                |
 | `repository/RawPhotoRepository.java`       | Repository      | CRUD access for `RawPhoto` entities.                                                                      |
 
-
+<br>
+<br>
 
 
 ## REST API Controllers
@@ -164,7 +168,8 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 | `controller/RawPhotoController.java`       | Controller  | CRUD for raw photos, allows updating ISO value.                                                       |
 
 
-
+<br>
+<br>
 
 ## DTO (Data Transfer Objects)
 | **File**                  | **Category** | **Description**                                                           |
@@ -173,7 +178,8 @@ For the full detailed UML diagram source file, see [class-diagram.puml](class-di
 
 
 
-
+<br>
+<br>
 
 ## API Routes
 | Method | Endpoint           | Description               | Auth  |
